@@ -8,9 +8,9 @@ const { protect } = require('./middleware/auth.middleware.js');
 
 const app = express();
 
-// CORS middleware
+// CORS middleware - allow all origins for deployment
 app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    origin: true,
     credentials: true
 }));
 

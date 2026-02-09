@@ -1,68 +1,194 @@
-# Draftly - Notes & Bookmarks Manager
+# 📝 Inkwell — Personal Notes & Bookmark Manager
 
-A minimal, editorial-style frontend for managing notes and bookmarks.
+Inkwell is a calm, minimal **personal knowledge management SaaS-style application** that allows users to create notes, save bookmarks, and organize information efficiently.
 
-## Design Principles
+Built with a **Quiet Productivity** design philosophy, Inkwell focuses on simplicity, clarity, and distraction-free usage.
 
-- Editorial layout with generous whitespace
-- Calm typography using Geist font
-- Minimal color palette with light/dark mode toggle
-- Focus on content and readability
+---
 
-## Tech Stack
+## ✨ Features
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: JavaScript (React)
-- **Styling**: Tailwind CSS v4
-- **Icons**: Lucide React
+### Core Features
+- 📝 Create, edit, and delete notes
+- 🔖 Save bookmarks with URL, title, and description
+- 🏷 Tag-based organization and filtering
+- 🔍 Search notes and bookmarks by text
+- ⭐ Mark notes and bookmarks as favorites
+- 📌 Pin important notes
+- 🕒 Relative timestamps (e.g. *Edited 2 days ago*)
+- ↕ Sort by recently updated or recently created
 
-## Folder Structure
+### Authentication & Security
+- 🔐 User signup and login
+- 🪪 JWT-based authentication
+- 🔒 Protected routes
+- 🔑 Password hashing using bcrypt
 
-```
+### UX & Design
+- 🎨 Quiet Productivity theme
+- 📖 Reading-focused editorial layout
+- 📱 Fully responsive (mobile-first)
+- 🧘 Minimal and distraction-free UI
+
+### Bonus Features
+- 🧠 Auto-fetch bookmark title if left empty
+- 🗑 Soft delete support (future-ready)
+- 🌙 Dark mode (planned)
+
+---
+
+## 🧠 Why Inkwell?
+
+Inkwell demonstrates **real-world SaaS fundamentals**, including:
+- RESTful API design
+- Authentication & authorization
+- Clean backend architecture
+- Reusable frontend components
+- Thoughtful UX decisions
+
+This project is ideal for portfolios and technical interviews.
+
+---
+
+## 🏗 Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- React (JavaScript)
+- Tailwind CSS
+- Lucide Icons
+
+### Backend
+- Node.js
+- Express.js
+- MongoDB & Mongoose
+- JWT Authentication
+- bcrypt
+
+---
+
+## 📂 Project Structure
+
+### Backend
+```txt
+backend/
+├── src/
+│   ├── config/
+│   │   └── db.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Note.js
+│   │   └── Bookmark.js
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── note.controller.js
+│   │   └── bookmark.controller.js
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── note.routes.js
+│   │   └── bookmark.routes.js
+│   ├── middleware/
+│   │   ├── auth.middleware.js
+│   │   └── error.middleware.js
+│   ├── utils/
+│   │   ├── validateUrl.js
+│   │   └── fetchTitle.js
+│   └── app.js
+├── server.js
+└── README.md
+Frontend
 frontend/
 ├── app/
-│   ├── layout.js          # Root layout with Navbar & Footer
-│   ├── page.js             # Landing page
+│   ├── layout.js
+│   ├── page.js
+│   ├── login/
+│   │   └── page.js
+│   ├── signup/
+│   │   └── page.js
 │   ├── notes/
-│   │   └── page.js         # Notes page
+│   │   └── page.js
 │   └── bookmarks/
-│       └── page.js         # Bookmarks page
+│       └── page.js
 ├── components/
-│   ├── Container.jsx       # Centered content wrapper
-│   ├── Navbar.jsx          # Top navigation with theme toggle
-│   ├── Footer.jsx          # Page footer
-│   ├── EmptyState.jsx      # Empty state placeholder
-│   └── ThemeProvider.jsx   # Light/dark theme context
+│   ├── Navbar.jsx
+│   ├── AuthForm.jsx
+│   ├── NoteCard.jsx
+│   ├── BookmarkCard.jsx
+│   ├── SearchBar.jsx
+│   ├── TagFilter.jsx
+│   └── EmptyState.jsx
+├── context/
+│   └── AuthContext.js
 ├── services/
-│   └── api.js              # Placeholder API calls
-└── styles/
-    └── globals.css         # Global styles & theme
-```
+│   └── api.js
+└── README.md
+🔌 API Documentation
+Authentication
+POST /api/auth/signup
+POST /api/auth/login
+GET  /api/auth/me
+Notes
+POST   /api/notes
+GET    /api/notes?q=&tags=&sort=
+GET    /api/notes/:id
+PUT    /api/notes/:id
+DELETE /api/notes/:id
+Bookmarks
+POST   /api/bookmarks
+GET    /api/bookmarks?q=&tags=&sort=
+GET    /api/bookmarks/:id
+PUT    /api/bookmarks/:id
+DELETE /api/bookmarks/:id
+🔐 All notes and bookmarks routes require a valid JWT token.
 
-## Getting Started
+⚙️ Environment Variables
+Create a .env file in the backend directory:
 
-```bash
-# Install dependencies
+PORT=5000
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+🚀 Getting Started
+Backend
+cd backend
 npm install
-
-# Run development server
 npm run dev
+Frontend
+cd frontend
+npm install
+npm run dev
+Frontend: http://localhost:3000
 
-# Build for production
-npm run build
-```
+Backend: http://localhost:5000
 
-Open [http://localhost:3000](http://localhost:3000) to view the app.
+🧪 Example API Request
+GET /api/notes?sort=updated
+Authorization: Bearer <JWT_TOKEN>
+🧭 Roadmap
+🌙 Dark mode
 
-## Features
+📂 Collections / folders
 
-- **Theme Toggle**: Click the sun/moon icon in the navbar to switch between light and dark modes
-- **Persistent Theme**: Your theme preference is saved to localStorage
+🗑 Trash & restore
 
-## Routes
+📤 Export notes (Markdown / TXT)
 
-| Route | Description |
-|-------|-------------|
-| `/` | Landing page with navigation links |
-| `/notes` | Notes page (empty state) |
-| `/bookmarks` | Bookmarks page (empty state) |
+🔄 Refresh token support
+
+🧑‍💻 Learning Outcomes
+REST API design
+
+JWT authentication
+
+MongoDB data modeling
+
+React state management
+
+Clean UI/UX design
+
+Full-stack project structuring
+
+📜 License
+MIT License
+
+🙌 Acknowledgements
+Inspired by modern minimal note-taking and productivity tools.

@@ -23,7 +23,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Draftly - Notes & Bookmarks",
+  title: "Inkwell - Notes & Bookmarks",
   description: "A minimal notes and bookmarks manager for organizing your thoughts.",
 };
 

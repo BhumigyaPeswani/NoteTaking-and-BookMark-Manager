@@ -11,7 +11,7 @@ export default function Footer() {
                     className="text-sm text-center"
                     style={{ color: 'var(--muted)' }}
                 >
-                    © {new Date().getFullYear()} Draftly
+                    © {new Date().getFullYear()} Inkwell
                 </p>
             </Container>
         </footer>

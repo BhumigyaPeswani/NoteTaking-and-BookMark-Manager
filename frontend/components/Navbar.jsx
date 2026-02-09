@@ -24,7 +24,7 @@ export default function Navbar() {
                     className="text-lg font-semibold"
                     style={{ color: 'var(--foreground)', letterSpacing: '-0.02em' }}
                 >
-                    Draftly
+                    Inkwell
                 </Link>
                 <div className="flex items-center gap-5">
                     {isAuthenticated ? (

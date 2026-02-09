@@ -36,7 +36,7 @@ export default function AuthForm({ type, onSubmit, loading, error }) {
             >
                 {isSignup
                     ? "Sign up to start organizing your thoughts"
-                    : "Sign in to continue to Draftly"
+                    : "Sign in to continue to Inkwell"
                 }
             </p>
 
