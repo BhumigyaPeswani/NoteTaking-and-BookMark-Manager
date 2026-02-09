@@ -1,9 +1,16 @@
 const express = require('express');
+const cors = require('cors');
 const noteRoutes = require('./routes/note.routes.js');
 const bookmarkRoutes = require('./routes/bookmark.routes.js');
 const { errorHandler, notFound } = require('./middleware/error.middleware.js');
 
 const app = express();
+
+// CORS middleware - allow frontend to access API
+app.use(cors({
+    origin: ['http://localhost:3000', 'http://localhost:3001'],
+    credentials: true
+}));
 
 // Body parser middleware
 app.use(express.json());
