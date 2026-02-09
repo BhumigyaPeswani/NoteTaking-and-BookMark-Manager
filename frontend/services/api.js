@@ -2,10 +2,69 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
 
-// Notes API
-export async function getNotes() {
+// Helper to get auth header
+const getAuthHeader = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+};
+
+// Auth API
+export async function signupUser(name, email, password) {
     try {
-        const res = await fetch(`${API_BASE_URL}/notes`);
+        const res = await fetch(`${API_BASE_URL}/auth/signup`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password }),
+        });
+        const json = await res.json();
+        if (!res.ok) {
+            return { success: false, error: json.message || json.error || 'Signup failed' };
+        }
+        return { success: true, data: json.data };
+    } catch (error) {
+        console.error('Signup error:', error);
+        return { success: false, error: 'Unable to connect to server' };
+    }
+}
+
+export async function loginUser(email, password) {
+    try {
+        const res = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        });
+        const json = await res.json();
+        if (!res.ok) {
+            return { success: false, error: json.message || json.error || 'Invalid credentials' };
+        }
+        return { success: true, data: json.data };
+    } catch (error) {
+        console.error('Login error:', error);
+        return { success: false, error: 'Unable to connect to server' };
+    }
+}
+
+export async function getMe() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/auth/me`, {
+            headers: { ...getAuthHeader() },
+        });
+        if (!res.ok) return null;
+        const json = await res.json();
+        return json.data;
+    } catch (error) {
+        console.error('Get me error:', error);
+        return null;
+    }
+}
+
+// Notes API
+export async function getNotes(sort = 'updated') {
+    try {
+        const res = await fetch(`${API_BASE_URL}/notes?sort=${sort}`, {
+            headers: { ...getAuthHeader() },
+        });
         if (!res.ok) throw new Error('Failed to fetch notes');
         const json = await res.json();
         return json.data || [];
@@ -17,7 +76,9 @@ export async function getNotes() {
 
 export async function getNoteById(id) {
     try {
-        const res = await fetch(`${API_BASE_URL}/notes/${id}`);
+        const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
+            headers: { ...getAuthHeader() },
+        });
         if (!res.ok) throw new Error('Failed to fetch note');
         const json = await res.json();
         return json.data || null;
@@ -31,7 +92,10 @@ export async function createNote(data) {
     try {
         const res = await fetch(`${API_BASE_URL}/notes`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
             body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Failed to create note');
@@ -47,7 +111,10 @@ export async function updateNote(id, data) {
     try {
         const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
             body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Failed to update note');
@@ -63,6 +130,7 @@ export async function deleteNote(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/notes/${id}`, {
             method: 'DELETE',
+            headers: { ...getAuthHeader() },
         });
         if (!res.ok) throw new Error('Failed to delete note');
         return true;
@@ -73,9 +141,11 @@ export async function deleteNote(id) {
 }
 
 // Bookmarks API
-export async function getBookmarks() {
+export async function getBookmarks(sort = 'updated') {
     try {
-        const res = await fetch(`${API_BASE_URL}/bookmarks`);
+        const res = await fetch(`${API_BASE_URL}/bookmarks?sort=${sort}`, {
+            headers: { ...getAuthHeader() },
+        });
         if (!res.ok) throw new Error('Failed to fetch bookmarks');
         const json = await res.json();
         return json.data || [];
@@ -87,7 +157,9 @@ export async function getBookmarks() {
 
 export async function getBookmarkById(id) {
     try {
-        const res = await fetch(`${API_BASE_URL}/bookmarks/${id}`);
+        const res = await fetch(`${API_BASE_URL}/bookmarks/${id}`, {
+            headers: { ...getAuthHeader() },
+        });
         if (!res.ok) throw new Error('Failed to fetch bookmark');
         const json = await res.json();
         return json.data || null;
@@ -101,7 +173,10 @@ export async function createBookmark(data) {
     try {
         const res = await fetch(`${API_BASE_URL}/bookmarks`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
             body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Failed to create bookmark');
@@ -117,7 +192,10 @@ export async function updateBookmark(id, data) {
     try {
         const res = await fetch(`${API_BASE_URL}/bookmarks/${id}`, {
             method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                ...getAuthHeader(),
+            },
             body: JSON.stringify(data),
         });
         if (!res.ok) throw new Error('Failed to update bookmark');
@@ -133,6 +211,7 @@ export async function deleteBookmark(id) {
     try {
         const res = await fetch(`${API_BASE_URL}/bookmarks/${id}`, {
             method: 'DELETE',
+            headers: { ...getAuthHeader() },
         });
         if (!res.ok) throw new Error('Failed to delete bookmark');
         return true;

@@ -1,8 +1,16 @@
 import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ThemeProvider from "@/components/ThemeProvider";
+import { AuthProvider } from "@/context/AuthContext";
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -23,15 +31,18 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="light">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col`}
+        style={{ fontFamily: "'Inter', var(--font-geist-sans), system-ui, sans-serif" }}
       >
-        <ThemeProvider>
-          <Navbar />
-          <main className="flex-1 py-8">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <Navbar />
+            <main className="flex-1 py-10">
+              {children}
+            </main>
+            <Footer />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

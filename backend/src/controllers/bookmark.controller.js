@@ -28,6 +28,7 @@ const createBookmark = async (req, res, next) => {
         }
 
         const bookmark = await Bookmark.create({
+            userId: req.user._id,
             url,
             title,
             description,
@@ -45,13 +46,13 @@ const createBookmark = async (req, res, next) => {
 };
 
 /**
- * @desc    Get all bookmarks with optional search and tag filter
- * @route   GET /api/bookmarks?q=&tags=
+ * @desc    Get all bookmarks with optional search, tag filter, and sorting
+ * @route   GET /api/bookmarks?q=&tags=&sort=
  */
 const getBookmarks = async (req, res, next) => {
     try {
-        const { q, tags } = req.query;
-        let query = {};
+        const { q, tags, sort } = req.query;
+        let query = { userId: req.user._id };
 
         // Search by title, description, or url
         if (q) {
@@ -68,7 +69,9 @@ const getBookmarks = async (req, res, next) => {
             query.tags = { $in: tagArray };
         }
 
-        const bookmarks = await Bookmark.find(query).sort({ createdAt: -1 });
+        // Sorting: default to updatedAt DESC
+        const sortField = sort === 'created' ? 'createdAt' : 'updatedAt';
+        const bookmarks = await Bookmark.find(query).sort({ [sortField]: -1 });
 
         res.status(200).json({
             success: true,
@@ -86,7 +89,7 @@ const getBookmarks = async (req, res, next) => {
  */
 const getBookmarkById = async (req, res, next) => {
     try {
-        const bookmark = await Bookmark.findById(req.params.id);
+        const bookmark = await Bookmark.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!bookmark) {
             res.status(404);
@@ -110,7 +113,7 @@ const updateBookmark = async (req, res, next) => {
     try {
         const { url, title, description, tags, favorite } = req.body;
 
-        let bookmark = await Bookmark.findById(req.params.id);
+        let bookmark = await Bookmark.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!bookmark) {
             res.status(404);
@@ -144,7 +147,7 @@ const updateBookmark = async (req, res, next) => {
  */
 const deleteBookmark = async (req, res, next) => {
     try {
-        const bookmark = await Bookmark.findById(req.params.id);
+        const bookmark = await Bookmark.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!bookmark) {
             res.status(404);

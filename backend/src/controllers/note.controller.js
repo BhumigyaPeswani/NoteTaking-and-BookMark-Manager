@@ -14,6 +14,7 @@ const createNote = async (req, res, next) => {
         }
 
         const note = await Note.create({
+            userId: req.user._id,
             title,
             content,
             tags,
@@ -30,13 +31,13 @@ const createNote = async (req, res, next) => {
 };
 
 /**
- * @desc    Get all notes with optional search and tag filter
- * @route   GET /api/notes?q=&tags=
+ * @desc    Get all notes with optional search, tag filter, and sorting
+ * @route   GET /api/notes?q=&tags=&sort=
  */
 const getNotes = async (req, res, next) => {
     try {
-        const { q, tags } = req.query;
-        let query = {};
+        const { q, tags, sort } = req.query;
+        let query = { userId: req.user._id };
 
         // Search by title or content
         if (q) {
@@ -52,7 +53,9 @@ const getNotes = async (req, res, next) => {
             query.tags = { $in: tagArray };
         }
 
-        const notes = await Note.find(query).sort({ createdAt: -1 });
+        // Sorting: default to updatedAt DESC
+        const sortField = sort === 'created' ? 'createdAt' : 'updatedAt';
+        const notes = await Note.find(query).sort({ [sortField]: -1 });
 
         res.status(200).json({
             success: true,
@@ -70,7 +73,7 @@ const getNotes = async (req, res, next) => {
  */
 const getNoteById = async (req, res, next) => {
     try {
-        const note = await Note.findById(req.params.id);
+        const note = await Note.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!note) {
             res.status(404);
@@ -94,7 +97,7 @@ const updateNote = async (req, res, next) => {
     try {
         const { title, content, tags, favorite } = req.body;
 
-        let note = await Note.findById(req.params.id);
+        let note = await Note.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!note) {
             res.status(404);
@@ -122,7 +125,7 @@ const updateNote = async (req, res, next) => {
  */
 const deleteNote = async (req, res, next) => {
     try {
-        const note = await Note.findById(req.params.id);
+        const note = await Note.findOne({ _id: req.params.id, userId: req.user._id });
 
         if (!note) {
             res.status(404);
