@@ -4,6 +4,11 @@ Inkwell is a calm, minimal **personal knowledge management SaaS-style applicatio
 
 Built with a **Quiet Productivity** design philosophy, Inkwell focuses on simplicity, clarity, and distraction-free usage.
 
+## 🔗 Live Demo
+
+- **Frontend:** [https://inkwell-three.vercel.app](https://inkwell-three.vercel.app)
+- **Backend API:** [https://inkwell-ieyz.onrender.com](https://inkwell-ieyz.onrender.com)
+
 ---
 
 ## ✨ Features
